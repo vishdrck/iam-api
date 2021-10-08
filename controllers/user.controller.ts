@@ -194,15 +194,39 @@ export class UserController {
         if (error) {
           internalErrorResponseService(error, res);
         } else {
+          console.log(dataAuth);
           if (dataAuth && dataAuth.length && dataAuth.length === 1) {
             if (dataAuth[0].token) {
               const today = new Date(Date.now());
-              if (data) {
+              let expDate = new Date(dataAuth[0].expiryDate);
+              if (today.getTime() < expDate.getTime()) {
+                expDate.setDate(today.getDate() + 3);
+                this.authService.updateAuth(dataAuth[0]._uid, { _uid: dataAuth[0]._uid, expiryDate: expDate, token: dataAuth[0].token }, (error: any, isUpdated: boolean) => {
+                  if (error) {
+                    internalErrorResponseService(error, res);
+                  } else {
+                    sendResponseService(HTTPCODES.SUCCESS, 'success', 'Token validated successfully', {
+                      validity: true
+                    },
+                      res);
+                  }                 
+                });
 
+              } else {
+                sendResponseService(HTTPCODES.SUCCESS, 'failed', 'Token is expired', {
+                  validity: false
+                },
+                  res);
               }
+            } else {
+              sendResponseService(HTTPCODES.SUCCESS, 'failed', 'Token is not found', {
+                validity: false
+              },
+                res);
             }
-            sendResponseService(HTTPCODES.SUCCESS, 'success', 'Token validated successfully', {
-             validity: true
+          } else {
+            sendResponseService(HTTPCODES.SUCCESS, 'failed', 'Token is not found', {
+              validity: false
             },
               res);
           }
@@ -210,7 +234,6 @@ export class UserController {
       });
     } else {
       insufficientDataResponseService(res);
-
     }
 
     logger.info('function validateToken() ended execution');

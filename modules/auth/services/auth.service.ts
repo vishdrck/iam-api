@@ -8,12 +8,12 @@ export class AuthService {
     _auth.save(callback);
   }
 
-  public updateAuth(_id: mongoose.Types.ObjectId, authParams: IAuth, callback: mongoose.Callback) {
-    auth.findOneAndUpdate({ _id: _id }, authParams,null,callback)
+  public updateAuth(_uid: mongoose.Types.ObjectId, authParams: IAuth, callback: mongoose.Callback) {
+    auth.findOneAndUpdate({ _uid: _uid }, authParams,null,callback)
   }
 
-  public deleteAuth(_id: mongoose.Types.ObjectId,callback: mongoose.Callback) {
-    auth.findOneAndUpdate({_id: _id}, {isDeleted: true}, callback);
+  public deleteAuth(_uid: mongoose.Types.ObjectId,callback: mongoose.Callback) {
+    auth.findOneAndUpdate({_uid: _uid}, {isDeleted: true}, callback);
   }
 
   public restoreAuth(_id: mongoose.Types.ObjectId,callback: mongoose.Callback) {

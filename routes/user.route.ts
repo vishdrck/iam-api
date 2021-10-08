@@ -17,5 +17,9 @@ export class UserRoutes {
     app.get('/user', (req: Request, res: Response) => {
       this.userController.getUser(req,res);
     });
+
+    app.post('/validate/token', (req: Request, res: Response) => {
+      this.userController.validateToken(req, res);
+    });
   }
 }
