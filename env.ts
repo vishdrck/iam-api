@@ -92,4 +92,4 @@ class Environment {
   }
 }
 
-export default new Environment(Environments.LOCAL_WINDOWS,true);
+export default new Environment(Environments.PROD_SERVER,false);

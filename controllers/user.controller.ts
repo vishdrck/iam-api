@@ -37,24 +37,28 @@ export class UserController {
             if (sha1(req.body.password) === dataUser[0].password) {
               const token = generateUUID();
               const newAuthToken: IAuth = {
-                _uid: dataUser[0]._uid,
+                _uid: dataUser[0]._id,
                 token: token,
                 expiryDate: this.createExpiryDate()
               };
-
-              this.authService.updateAuth(dataUser[0]._uid, newAuthToken, (error: any, isCreated: boolean) => {
+              // console.log(newAuthToken);
+              this.authService.updateAuth(dataUser[0]._id, newAuthToken, (error: any, isCreated) => {
+                console.log(isCreated);
                 if (error) {
                   internalErrorResponseService(error, res);
                 } else {
-                  console.log(dataUser);
-                  sendResponseService(HTTPCODES.SUCCESS, 'success', 'Login Successfully', {
-                    _uid: dataUser[0]._uid,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: req.body.email,
-                    username: req.body.username,
-                    token: token
-                  }, res);
+                  if (isCreated) {
+                    sendResponseService(HTTPCODES.SUCCESS, 'success', 'Login Successfully', {
+                      _uid: dataUser[0]._id,
+                      firstName: req.body.firstName,
+                      lastName: req.body.lastName,
+                      email: req.body.email,
+                      username: req.body.username,
+                      token: token
+                    }, res);
+                  } else {
+                    sendResponseService(HTTPCODES.SUCCESS, 'failed', 'Login failed', {}, res);
+                  }
                 }
               });
             } else {

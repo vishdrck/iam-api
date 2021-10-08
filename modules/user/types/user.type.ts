@@ -9,7 +9,7 @@ export interface IUser {
 }
 
 export interface ILoginUser {
-  _uid: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
   firstName: string;
   lastName?: string;
   email: string;
